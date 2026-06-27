@@ -1,4 +1,14 @@
 Flask==3.0.0
 Flask-CORS==4.0.0
+
+# Base de datos MySQL
 mysql-connector-python==8.2.0
+
+# Variables de entorno
 python-dotenv==1.0.0
+
+# Servidor de producción (CRÍTICO para ECS)
+gunicorn==21.2.0
+
+# Opcional pero recomendado (mejor estabilidad HTTP)
+requests==2.31.0
