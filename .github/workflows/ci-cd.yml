@@ -43,6 +43,10 @@ jobs:
           pip install --no-cache-dir -r requirements.txt
           pip install pytest
 
+      - name: Debug repo structure
+        run: |
+          ls -R
+
       # 6. Ejecutar tests (CRÍTICO FIX PYTHONPATH)
       - name: Run tests
         run: |
