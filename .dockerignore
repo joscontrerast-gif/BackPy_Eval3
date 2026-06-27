@@ -1,9 +1,7 @@
-.git
-.gitignore
 venv
 __pycache__
-.env
 *.pyc
-*.log
-.vscode
-.idea
+.git
+.github
+.env
+README.md
