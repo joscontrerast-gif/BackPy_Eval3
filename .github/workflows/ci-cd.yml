@@ -19,7 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Configurar credenciales AWS (LabRole)
+      # 2. Configurar AWS (LAB ROLE)
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -28,41 +28,43 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # 3. Login a ECR
+      # 3. Login a Amazon ECR
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      # 4. Definir versión (tag)
+      # 4. Definir versión de imagen (TAG PROFESIONAL)
       - name: Generate image tag
         run: |
           echo "IMAGE_TAG=v1.${{ github.run_number }}.${GITHUB_SHA::7}" >> $GITHUB_ENV
 
-      # 5. Instalar dependencias y tests
+      # 5. Instalar dependencias
       - name: Install dependencies
         run: |
           pip install --no-cache-dir -r requirements.txt
           pip install pytest
 
+      # 6. Ejecutar tests (FIX IMPORTANTE PYTHONPATH)
       - name: Run tests
         run: |
+          export PYTHONPATH=.
           pytest
 
-      # 6. Build imagen Docker
+      # 7. Build Docker image
       - name: Build Docker image
         run: |
           docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
-      # 7. Tag para ECR
+      # 8. Tag para ECR
       - name: Tag Docker image
         run: |
           docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
 
-      # 8. Push a ECR
+      # 9. Push a ECR
       - name: Push Docker image
         run: |
           docker push $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
 
-      # 9. (Opcional) Tag latest para despliegue fácil
+      # 10. (Opcional pero recomendado) latest
       - name: Tag latest
         run: |
           docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REGISTRY/$IMAGE_NAME:latest
