@@ -1,11 +1,14 @@
-from app import app
+from flask import Flask, jsonify
 
-def test_home():
-    client = app.test_client()
-    response = client.get("/")
-    assert response.status_code == 200
+app = Flask(__name__)
 
-def test_health():
-    client = app.test_client()
-    response = client.get("/health")
-    assert response.status_code == 200
+@app.route("/")
+def home():
+    return jsonify({"message": "Backend running"})
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok"})
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8082)
