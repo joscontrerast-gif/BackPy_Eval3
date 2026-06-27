@@ -15,7 +15,7 @@ jobs:
       IMAGE_NAME: backend-python
 
     steps:
-      # 1. Checkout código
+      # 1. Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -28,11 +28,11 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # 3. Login a Amazon ECR
+      # 3. Login ECR
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      # 4. Definir versión de imagen (TAG PROFESIONAL)
+      # 4. Definir tag versión
       - name: Generate image tag
         run: |
           echo "IMAGE_TAG=v1.${{ github.run_number }}.${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -43,18 +43,18 @@ jobs:
           pip install --no-cache-dir -r requirements.txt
           pip install pytest
 
-      # 6. Ejecutar tests (FIX IMPORTANTE PYTHONPATH)
+      # 6. Ejecutar tests (CRÍTICO FIX PYTHONPATH)
       - name: Run tests
         run: |
           export PYTHONPATH=.
-          pytest tests/ -v
+          python -m pytest tests -v
 
       # 7. Build Docker image
       - name: Build Docker image
         run: |
           docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
-      # 8. Tag para ECR
+      # 8. Tag image para ECR
       - name: Tag Docker image
         run: |
           docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
@@ -64,7 +64,7 @@ jobs:
         run: |
           docker push $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
 
-      # 10. (Opcional pero recomendado) latest
+      # 10. Latest (opcional pero útil)
       - name: Tag latest
         run: |
           docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REGISTRY/$IMAGE_NAME:latest
