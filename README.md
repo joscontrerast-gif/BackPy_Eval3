@@ -2,6 +2,8 @@
 
 Backend en Python (Flask) para gestión de productos con base de datos MySQL.
 
+## CI/CD PipelineEnabled
+
 ## Características
 
 - API REST para gestión de productos
@@ -76,3 +78,7 @@ Obtener productos:
 ```bash
 curl http://localhost:8082/api/products
 ```
+
+
+
+
