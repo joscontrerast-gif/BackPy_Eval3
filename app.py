@@ -19,7 +19,7 @@ db_config = {
     'password': os.getenv('DB_PASSWORD', ''),
     'database': os.getenv('DB_NAME', 'products_db')
 }
-
+#MODIFICACION -> PARA QUE EL BACKEND ESPERE A QUE MYSQL ESTE LEVANTADO, ANTES DERECHAMENTE NO FUNCIONABA
 def get_db_connection():
     max_retries = 10
     retry_delay = 3
